@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>THISISFIS</title>
+  <meta name="description" content="THISISFIS — prints, merch, media, archive, experiments." />
+  <meta name="robots" content="index, follow" />
+  <style>
+    :root {
+      --bg: #070707;
+      --fg: #f2f0ea;
+      --muted: #8c8a82;
+      --line: rgba(242, 240, 234, 0.16);
+      --soft: rgba(242, 240, 234, 0.055);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { min-height: 100%; background: var(--bg); }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: Arial, Helvetica, sans-serif;
+      letter-spacing: -0.02em;
+    }
+
+    .page {
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      padding: clamp(20px, 4vw, 44px);
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    .page::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -2;
+      background:
+        radial-gradient(circle at 18% 22%, rgba(255,255,255,0.08), transparent 28%),
+        radial-gradient(circle at 82% 78%, rgba(255,255,255,0.055), transparent 32%),
+        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size: auto, auto, 42px 42px, 42px 42px;
+    }
+
+    .page::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background: linear-gradient(180deg, rgba(7,7,7,0.2), rgba(7,7,7,0.86));
+    }
+
+    header, footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    main {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      max-width: 1280px;
+      padding: 8vh 0;
+    }
+
+    .kicker {
+      margin-bottom: 18px;
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(58px, 15vw, 190px);
+      line-height: 0.82;
+      letter-spacing: -0.095em;
+      text-transform: uppercase;
+      font-weight: 900;
+    }
+
+    .tagline {
+      margin-top: clamp(22px, 4vw, 38px);
+      max-width: 820px;
+      font-size: clamp(19px, 3.2vw, 42px);
+      line-height: 1.02;
+      text-transform: uppercase;
+    }
+
+    .status {
+      margin-top: 26px;
+      width: fit-content;
+      border: 1px solid var(--line);
+      padding: 11px 13px;
+      color: var(--muted);
+      background: var(--soft);
+      font-size: 12px;
+      line-height: 1;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    footer {
+      align-items: flex-end;
+      border-top: 1px solid var(--line);
+      padding-top: 18px;
+    }
+
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      justify-content: flex-end;
+    }
+
+    a {
+      color: var(--fg);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(242, 240, 234, 0.34);
+    }
+
+    a:hover, a:focus-visible {
+      border-bottom-color: var(--fg);
+      outline: none;
+    }
+
+    @media (max-width: 700px) {
+      header, footer {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      nav { justify-content: flex-start; }
+      main { padding: 10vh 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <div>THISISFIS / MOSCOW</div>
+      <div>ARCHIVE MODE</div>
+    </header>
+
+    <main>
+      <div class="kicker">родился — пригодился</div>
+      <h1>THISISFIS</h1>
+      <div class="tagline">prints / merch / media / archive / experiments</div>
+      <div class="status">site is being rebuilt</div>
+    </main>
+
+    <footer>
+      <div>temporary landing page</div>
+      <nav aria-label="Links">
+        <a href="#" aria-label="Telegram">Telegram</a>
+        <a href="https://thisisfreedom.vercel.app" aria-label="ThisisFreedom">ThisisFreedom</a>
+      </nav>
+    </footer>
+  </div>
+</body>
+</html>
