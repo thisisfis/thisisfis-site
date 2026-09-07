@@ -13,6 +13,7 @@
       --muted: #8c8a82;
       --line: rgba(242, 240, 234, 0.16);
       --soft: rgba(242, 240, 234, 0.055);
+      --ai333: #7157ff;
     }
 
     * { box-sizing: border-box; }
@@ -125,12 +126,125 @@
     a {
       color: var(--fg);
       text-decoration: none;
-      border-bottom: 1px solid rgba(242, 240, 234, 0.34);
     }
 
-    a:hover, a:focus-visible {
-      border-bottom-color: var(--fg);
+    a:focus-visible {
+      outline: 1px solid rgba(242, 240, 234, 0.5);
+      outline-offset: 4px;
+    }
+
+    /* ИИ В 3:33 НОЧИ — broken retro clock */
+    .ai333-link {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 68px;
+      height: 34px;
+      padding: 0 9px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      color: #aaa8a1;
+      background: rgba(242, 240, 234, 0.035);
+      filter: grayscale(1);
+      transition:
+        color .18s ease,
+        border-color .18s ease,
+        background .18s ease,
+        box-shadow .18s ease,
+        filter .18s ease,
+        transform .18s ease;
+    }
+
+    .ai333-link::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: .28;
+      background: repeating-linear-gradient(
+        180deg,
+        transparent 0,
+        transparent 3px,
+        rgba(255,255,255,.045) 4px
+      );
+    }
+
+    .ai333-clock {
+      position: relative;
+      z-index: 1;
+      display: inline-flex;
+      align-items: baseline;
+      justify-content: center;
+      font-family: "SFMono-Regular", Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: .035em;
+      font-variant-numeric: tabular-nums;
+      text-shadow: 0 0 7px rgba(255,255,255,.08);
+    }
+
+    .ai333-colon {
+      display: inline-block;
+      margin: 0 .02em;
+      animation: ai333Colon 1s steps(1, end) infinite;
+    }
+
+    .ai333-minutes {
+      display: inline-block;
+      min-width: 2.05ch;
+      transform-origin: 50% 50%;
+    }
+
+    .ai333-link:hover,
+    .ai333-link:focus-visible,
+    .ai333-link:active {
+      color: var(--ai333);
+      border-color: rgba(113, 87, 255, .58);
+      background: rgba(113, 87, 255, .08);
+      box-shadow:
+        0 0 0 1px rgba(113,87,255,.06) inset,
+        0 0 18px rgba(113,87,255,.16);
+      filter: grayscale(0);
+      transform: translateY(-1px);
       outline: none;
+    }
+
+    .ai333-link:hover .ai333-clock,
+    .ai333-link:focus-visible .ai333-clock,
+    .ai333-link:active .ai333-clock {
+      text-shadow:
+        0 0 6px rgba(113,87,255,.55),
+        0 0 14px rgba(113,87,255,.25);
+    }
+
+    .ai333-link.is-breaking .ai333-minutes {
+      animation: ai333Break 170ms steps(2, end) both;
+    }
+
+    .ai333-link.is-breaking .ai333-clock {
+      animation: ai333Jitter 170ms steps(2, end) both;
+    }
+
+    @keyframes ai333Colon {
+      0%, 49% { opacity: 1; }
+      50%, 100% { opacity: .28; }
+    }
+
+    @keyframes ai333Break {
+      0%   { opacity: 1; transform: translateY(0) skewX(0); }
+      30%  { opacity: .38; transform: translateY(-2px) skewX(-8deg); }
+      62%  { opacity: 1; transform: translateY(1px) skewX(5deg); }
+      100% { opacity: 1; transform: translateY(0) skewX(0); }
+    }
+
+    @keyframes ai333Jitter {
+      0%   { transform: translateX(0); }
+      30%  { transform: translateX(-1px); }
+      62%  { transform: translateX(1px); }
+      100% { transform: translateX(0); }
     }
 
     .apps {
@@ -190,6 +304,14 @@
 
     .flip-mark .dot { fill: currentColor; }
 
+    @media (prefers-reduced-motion: reduce) {
+      .ai333-colon,
+      .ai333-link.is-breaking .ai333-minutes,
+      .ai333-link.is-breaking .ai333-clock {
+        animation: none;
+      }
+    }
+
     @media (max-width: 700px) {
       header, footer {
         flex-direction: column;
@@ -224,7 +346,20 @@
     <footer>
       <div>ВРЕМЕННАЯ СТРАНИЦА</div>
       <nav aria-label="Ссылки и приложения">
-        <a href="#" aria-label="Телеграм">ТЕЛЕГРАМ</a>
+        <a
+          class="ai333-link"
+          id="ai333Link"
+          href="https://t.me/iamandai"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Телеграм-канал «ИИ В 3:33 НОЧИ»"
+          title="ИИ В 3:33 НОЧИ"
+        >
+          <span class="ai333-clock" aria-hidden="true">
+            <span>3</span><span class="ai333-colon">:</span><span class="ai333-minutes" id="ai333Minutes">33</span>
+          </span>
+        </a>
+
         <div class="apps" aria-label="Приложения">
           <span class="app-item" aria-label="ThisisFreedom — приложение, ссылка отключена" title="ThisisFreedom">
             <span class="app-icon" aria-hidden="true">
@@ -252,5 +387,27 @@
       </nav>
     </footer>
   </div>
+
+  <script>
+    (() => {
+      const link = document.getElementById('ai333Link');
+      const minutes = document.getElementById('ai333Minutes');
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      if (!link || !minutes || reduceMotion) return;
+
+      const breakClock = () => {
+        minutes.textContent = '34';
+        link.classList.add('is-breaking');
+
+        window.setTimeout(() => {
+          minutes.textContent = '33';
+          link.classList.remove('is-breaking');
+        }, 170);
+      };
+
+      window.setInterval(breakClock, 1000);
+    })();
+  </script>
 </body>
 </html>
