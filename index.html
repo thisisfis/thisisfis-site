@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>THISISFIS</title>
-  <meta name="description" content="THISISFIS — prints, merch, media, archive, experiments." />
+  <meta name="description" content="THISISFIS — принты, мерч, медиа, архив и эксперименты." />
   <meta name="robots" content="index, follow" />
   <style>
     :root {
@@ -78,14 +78,6 @@
       padding: 8vh 0;
     }
 
-    .kicker {
-      margin-bottom: 18px;
-      color: var(--muted);
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.16em;
-    }
-
     h1 {
       margin: 0;
       font-size: clamp(58px, 15vw, 190px);
@@ -127,6 +119,7 @@
       flex-wrap: wrap;
       gap: 14px;
       justify-content: flex-end;
+      align-items: center;
     }
 
     a {
@@ -138,6 +131,32 @@
     a:hover, a:focus-visible {
       border-bottom-color: var(--fg);
       outline: none;
+    }
+
+    .app-placeholder {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      color: var(--muted);
+      background: var(--soft);
+      opacity: 0.65;
+      cursor: default;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    .app-placeholder svg {
+      width: 16px;
+      height: 16px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.7;
+      stroke-linecap: round;
+      stroke-linejoin: round;
     }
 
     @media (max-width: 700px) {
@@ -154,22 +173,27 @@
 <body>
   <div class="page">
     <header>
-      <div>THISISFIS / MOSCOW</div>
-      <div>ARCHIVE MODE</div>
+      <div>THISISFIS / МОСКВА</div>
+      <div>АРХИВНЫЙ РЕЖИМ</div>
     </header>
 
     <main>
-      <div class="kicker">родился — пригодился</div>
       <h1>THISISFIS</h1>
-      <div class="tagline">prints / merch / media / archive / experiments</div>
-      <div class="status">site is being rebuilt</div>
+      <div class="tagline">ПРИНТЫ / МЕРЧ / МЕДИА / АРХИВ / ЭКСПЕРИМЕНТЫ</div>
+      <div class="status">САЙТ ОБНОВЛЯЕТСЯ</div>
     </main>
 
     <footer>
-      <div>temporary landing page</div>
-      <nav aria-label="Links">
-        <a href="#" aria-label="Telegram">Telegram</a>
-        <a href="https://thisisfreedom.vercel.app" aria-label="ThisisFreedom">ThisisFreedom</a>
+      <div>ВРЕМЕННАЯ СТРАНИЦА</div>
+      <nav aria-label="Ссылки">
+        <a href="#" aria-label="Телеграм">ТЕЛЕГРАМ</a>
+        <span class="app-placeholder" aria-label="Приложение скоро" title="Приложение скоро">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="6.5" y="3.5" width="11" height="17" rx="2.5"></rect>
+            <line x1="10" y1="6.5" x2="14" y2="6.5"></line>
+            <line x1="11" y1="17.5" x2="13" y2="17.5"></line>
+          </svg>
+        </span>
       </nav>
     </footer>
   </div>
