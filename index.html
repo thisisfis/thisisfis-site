@@ -133,118 +133,134 @@
       outline-offset: 4px;
     }
 
-    /* ИИ В 3:33 НОЧИ — broken retro clock */
+    /* ИИ В 3:33 НОЧИ — seven-segment clock mark */
     .ai333-link {
-      position: relative;
       display: inline-flex;
       align-items: center;
-      justify-content: center;
-      min-width: 68px;
-      height: 34px;
-      padding: 0 9px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      overflow: hidden;
       color: #aaa8a1;
-      background: rgba(242, 240, 234, 0.035);
       filter: grayscale(1);
-      transition:
-        color .18s ease,
-        border-color .18s ease,
-        background .18s ease,
-        box-shadow .18s ease,
-        filter .18s ease,
-        transform .18s ease;
-    }
-
-    .ai333-link::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      opacity: .28;
-      background: repeating-linear-gradient(
-        180deg,
-        transparent 0,
-        transparent 3px,
-        rgba(255,255,255,.045) 4px
-      );
+      padding: 2px 0;
+      transition: color .18s ease, filter .18s ease, transform .18s ease;
     }
 
     .ai333-clock {
-      position: relative;
-      z-index: 1;
       display: inline-flex;
-      align-items: baseline;
-      justify-content: center;
-      font-family: "SFMono-Regular", Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-      font-size: 18px;
-      font-weight: 700;
+      align-items: center;
+      gap: 1px;
       line-height: 1;
-      letter-spacing: .035em;
-      font-variant-numeric: tabular-nums;
-      text-shadow: 0 0 7px rgba(255,255,255,.08);
+    }
+
+    .seg-digit {
+      width: 18px;
+      height: 30px;
+      display: block;
+      flex: 0 0 auto;
+      overflow: visible;
+    }
+
+    .seg-digit .segment {
+      fill: currentColor;
+      opacity: .055;
+      transition: opacity 45ms linear, filter .18s ease;
+    }
+
+    .seg-digit[data-digit="3"] .seg-a,
+    .seg-digit[data-digit="3"] .seg-b,
+    .seg-digit[data-digit="3"] .seg-c,
+    .seg-digit[data-digit="3"] .seg-d,
+    .seg-digit[data-digit="3"] .seg-g,
+    .seg-digit[data-digit="4"] .seg-b,
+    .seg-digit[data-digit="4"] .seg-c,
+    .seg-digit[data-digit="4"] .seg-f,
+    .seg-digit[data-digit="4"] .seg-g {
+      opacity: .94;
     }
 
     .ai333-colon {
-      display: inline-block;
-      margin: 0 .02em;
+      width: 7px;
+      height: 30px;
+      position: relative;
+      flex: 0 0 7px;
+      opacity: .88;
       animation: ai333Colon 1s steps(1, end) infinite;
     }
 
-    .ai333-minutes {
-      display: inline-block;
-      min-width: 2.05ch;
-      transform-origin: 50% 50%;
+    .ai333-colon::before,
+    .ai333-colon::after {
+      content: "";
+      position: absolute;
+      left: 2px;
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    .ai333-colon::before { top: 9px; }
+    .ai333-colon::after { bottom: 9px; }
+
+    .ai333-am {
+      margin-left: 4px;
+      margin-top: 1px;
+      font-family: "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: -.035em;
+      line-height: 1;
+      opacity: .72;
+      align-self: center;
     }
 
     .ai333-link:hover,
     .ai333-link:focus-visible,
     .ai333-link:active {
       color: var(--ai333);
-      border-color: rgba(113, 87, 255, .58);
-      background: rgba(113, 87, 255, .08);
-      box-shadow:
-        0 0 0 1px rgba(113,87,255,.06) inset,
-        0 0 18px rgba(113,87,255,.16);
       filter: grayscale(0);
       transform: translateY(-1px);
       outline: none;
     }
 
-    .ai333-link:hover .ai333-clock,
-    .ai333-link:focus-visible .ai333-clock,
-    .ai333-link:active .ai333-clock {
-      text-shadow:
-        0 0 6px rgba(113,87,255,.55),
-        0 0 14px rgba(113,87,255,.25);
+    .ai333-link:hover .seg-digit .segment,
+    .ai333-link:focus-visible .seg-digit .segment,
+    .ai333-link:active .seg-digit .segment {
+      filter: drop-shadow(0 0 3px rgba(113,87,255,.66));
     }
 
-    .ai333-link.is-breaking .ai333-minutes {
-      animation: ai333Break 170ms steps(2, end) both;
+    .ai333-link:hover .ai333-colon,
+    .ai333-link:focus-visible .ai333-colon,
+    .ai333-link:active .ai333-colon,
+    .ai333-link:hover .ai333-am,
+    .ai333-link:focus-visible .ai333-am,
+    .ai333-link:active .ai333-am {
+      text-shadow: 0 0 7px rgba(113,87,255,.46);
     }
 
     .ai333-link.is-breaking .ai333-clock {
-      animation: ai333Jitter 170ms steps(2, end) both;
+      animation: ai333Jitter 180ms steps(2, end) both;
+    }
+
+    .ai333-link.is-breaking .seg-digit:last-of-type {
+      animation: ai333Flicker 180ms steps(2, end) both;
     }
 
     @keyframes ai333Colon {
-      0%, 49% { opacity: 1; }
-      50%, 100% { opacity: .28; }
-    }
-
-    @keyframes ai333Break {
-      0%   { opacity: 1; transform: translateY(0) skewX(0); }
-      30%  { opacity: .38; transform: translateY(-2px) skewX(-8deg); }
-      62%  { opacity: 1; transform: translateY(1px) skewX(5deg); }
-      100% { opacity: 1; transform: translateY(0) skewX(0); }
+      0%, 49% { opacity: .9; }
+      50%, 100% { opacity: .34; }
     }
 
     @keyframes ai333Jitter {
       0%   { transform: translateX(0); }
-      30%  { transform: translateX(-1px); }
+      28%  { transform: translateX(-1px); }
       62%  { transform: translateX(1px); }
       100% { transform: translateX(0); }
+    }
+
+    @keyframes ai333Flicker {
+      0%   { opacity: 1; }
+      28%  { opacity: .28; }
+      58%  { opacity: .9; }
+      78%  { opacity: .42; }
+      100% { opacity: 1; }
     }
 
     .apps {
@@ -306,8 +322,8 @@
 
     @media (prefers-reduced-motion: reduce) {
       .ai333-colon,
-      .ai333-link.is-breaking .ai333-minutes,
-      .ai333-link.is-breaking .ai333-clock {
+      .ai333-link.is-breaking .ai333-clock,
+      .ai333-link.is-breaking .seg-digit:last-of-type {
         animation: none;
       }
     }
@@ -356,7 +372,35 @@
           title="ИИ В 3:33 НОЧИ"
         >
           <span class="ai333-clock" aria-hidden="true">
-            <span>3</span><span class="ai333-colon">:</span><span class="ai333-minutes" id="ai333Minutes">33</span>
+            <svg class="seg-digit" viewBox="0 0 20 34" data-digit="3">
+              <path class="segment seg-a" d="M4 1.5h12l2 2.1-2 2.1H4L2 3.6z"/>
+              <path class="segment seg-b" d="M16.4 5.7l2.1-2 1 1.8v10.2l-2 2-1.1-1.1z"/>
+              <path class="segment seg-c" d="M17.5 17l2 2v10.1l-1.9 1.9-1.2-1.1V18.1z"/>
+              <path class="segment seg-d" d="M4 28.6h12l2 2.1-2 2.1H4l-2-2.1z"/>
+              <path class="segment seg-e" d="M.5 19l2-2 1.1 1.1v11.8L2.4 31 .5 29.1z"/>
+              <path class="segment seg-f" d="M2.4 3.7l1.2 1.1v11.8L2.5 17.7l-2-2V5.5z"/>
+              <path class="segment seg-g" d="M4 15.1h12l2 1.9-2 1.9H4L2 17z"/>
+            </svg>
+            <span class="ai333-colon"></span>
+            <svg class="seg-digit" viewBox="0 0 20 34" data-digit="3">
+              <path class="segment seg-a" d="M4 1.5h12l2 2.1-2 2.1H4L2 3.6z"/>
+              <path class="segment seg-b" d="M16.4 5.7l2.1-2 1 1.8v10.2l-2 2-1.1-1.1z"/>
+              <path class="segment seg-c" d="M17.5 17l2 2v10.1l-1.9 1.9-1.2-1.1V18.1z"/>
+              <path class="segment seg-d" d="M4 28.6h12l2 2.1-2 2.1H4l-2-2.1z"/>
+              <path class="segment seg-e" d="M.5 19l2-2 1.1 1.1v11.8L2.4 31 .5 29.1z"/>
+              <path class="segment seg-f" d="M2.4 3.7l1.2 1.1v11.8L2.5 17.7l-2-2V5.5z"/>
+              <path class="segment seg-g" d="M4 15.1h12l2 1.9-2 1.9H4L2 17z"/>
+            </svg>
+            <svg class="seg-digit" id="ai333LastDigit" viewBox="0 0 20 34" data-digit="3">
+              <path class="segment seg-a" d="M4 1.5h12l2 2.1-2 2.1H4L2 3.6z"/>
+              <path class="segment seg-b" d="M16.4 5.7l2.1-2 1 1.8v10.2l-2 2-1.1-1.1z"/>
+              <path class="segment seg-c" d="M17.5 17l2 2v10.1l-1.9 1.9-1.2-1.1V18.1z"/>
+              <path class="segment seg-d" d="M4 28.6h12l2 2.1-2 2.1H4l-2-2.1z"/>
+              <path class="segment seg-e" d="M.5 19l2-2 1.1 1.1v11.8L2.4 31 .5 29.1z"/>
+              <path class="segment seg-f" d="M2.4 3.7l1.2 1.1v11.8L2.5 17.7l-2-2V5.5z"/>
+              <path class="segment seg-g" d="M4 15.1h12l2 1.9-2 1.9H4L2 17z"/>
+            </svg>
+            <span class="ai333-am">AM</span>
           </span>
         </a>
 
@@ -391,19 +435,19 @@
   <script>
     (() => {
       const link = document.getElementById('ai333Link');
-      const minutes = document.getElementById('ai333Minutes');
+      const lastDigit = document.getElementById('ai333LastDigit');
       const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-      if (!link || !minutes || reduceMotion) return;
+      if (!link || !lastDigit || reduceMotion) return;
 
       const breakClock = () => {
-        minutes.textContent = '34';
+        lastDigit.setAttribute('data-digit', '4');
         link.classList.add('is-breaking');
 
         window.setTimeout(() => {
-          minutes.textContent = '33';
+          lastDigit.setAttribute('data-digit', '3');
           link.classList.remove('is-breaking');
-        }, 170);
+        }, 180);
       };
 
       window.setInterval(breakClock, 1000);
