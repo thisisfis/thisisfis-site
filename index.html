@@ -117,7 +117,7 @@
     nav {
       display: flex;
       flex-wrap: wrap;
-      gap: 14px;
+      gap: 16px;
       justify-content: flex-end;
       align-items: center;
     }
@@ -133,31 +133,62 @@
       outline: none;
     }
 
-    .app-placeholder {
+    .apps {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-left: 2px;
+    }
+
+    .app-item {
       display: inline-flex;
       align-items: center;
-      justify-content: center;
-      width: 30px;
-      height: 30px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
+      gap: 7px;
       color: var(--muted);
-      background: var(--soft);
-      opacity: 0.65;
+      opacity: 0.72;
       cursor: default;
       user-select: none;
       pointer-events: none;
+      white-space: nowrap;
+      letter-spacing: 0.08em;
     }
 
-    .app-placeholder svg {
-      width: 16px;
-      height: 16px;
-      stroke: currentColor;
+    .app-icon {
+      width: 32px;
+      height: 32px;
+      flex: 0 0 32px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--soft);
+      color: var(--fg);
+      overflow: hidden;
+    }
+
+    .app-icon svg {
+      width: 21px;
+      height: 21px;
+      display: block;
+    }
+
+    .app-name {
+      font-size: 10px;
+      line-height: 1;
+    }
+
+    .freedom-mark .body,
+    .freedom-mark .shackle,
+    .freedom-mark .keyline,
+    .flip-mark .stroke {
       fill: none;
-      stroke-width: 1.7;
+      stroke: currentColor;
+      stroke-width: 1.65;
       stroke-linecap: round;
       stroke-linejoin: round;
     }
+
+    .flip-mark .dot { fill: currentColor; }
 
     @media (max-width: 700px) {
       header, footer {
@@ -167,6 +198,13 @@
 
       nav { justify-content: flex-start; }
       main { padding: 10vh 0; }
+
+      .apps {
+        width: 100%;
+        gap: 12px;
+      }
+
+      .app-name { display: none; }
     }
   </style>
 </head>
@@ -185,15 +223,32 @@
 
     <footer>
       <div>ВРЕМЕННАЯ СТРАНИЦА</div>
-      <nav aria-label="Ссылки">
+      <nav aria-label="Ссылки и приложения">
         <a href="#" aria-label="Телеграм">ТЕЛЕГРАМ</a>
-        <span class="app-placeholder" aria-label="Приложение скоро" title="Приложение скоро">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <rect x="6.5" y="3.5" width="11" height="17" rx="2.5"></rect>
-            <line x1="10" y1="6.5" x2="14" y2="6.5"></line>
-            <line x1="11" y1="17.5" x2="13" y2="17.5"></line>
-          </svg>
-        </span>
+        <div class="apps" aria-label="Приложения">
+          <span class="app-item" aria-label="ThisisFreedom — приложение, ссылка отключена" title="ThisisFreedom">
+            <span class="app-icon" aria-hidden="true">
+              <svg class="freedom-mark" viewBox="0 0 24 24">
+                <path class="shackle" d="M8.2 10V7.8a3.8 3.8 0 0 1 7.6 0V10"></path>
+                <rect class="body" x="6.4" y="10" width="11.2" height="8.8" rx="2.1"></rect>
+                <path class="keyline" d="M12 13.2v2.5"></path>
+              </svg>
+            </span>
+            <span class="app-name">THISISFREEDOM</span>
+          </span>
+
+          <span class="app-item" aria-label="ThisisFlip — приложение, ссылка отключена" title="ThisisFlip">
+            <span class="app-icon" aria-hidden="true">
+              <svg class="flip-mark" viewBox="0 0 24 24">
+                <path class="stroke" d="M5.2 6.2v11.6h5.2"></path>
+                <path class="stroke" d="M18.8 17.8V6.2h-5.2"></path>
+                <circle class="dot" cx="8.2" cy="6.2" r="1.25"></circle>
+                <circle class="dot" cx="15.8" cy="17.8" r="1.25"></circle>
+              </svg>
+            </span>
+            <span class="app-name">THISISFLIP</span>
+          </span>
+        </div>
       </nav>
     </footer>
   </div>
