@@ -12,5 +12,25 @@
       "destination": "https://thisisfis.com/:path*",
       "permanent": true
     }
+  ],
+  "headers": [
+    {
+      "source": "/40",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow, noarchive"
+        }
+      ]
+    },
+    {
+      "source": "/40/:path*",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow, noarchive"
+        }
+      ]
+    }
   ]
 }
