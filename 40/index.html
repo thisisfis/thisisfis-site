@@ -43,8 +43,24 @@
 const SB='https://ojnlygmerorlsmrcaarf.supabase.co';
 const KEY='sb_publishable_xZj-Mhacd6DxAbn6kfJBHQ_Qh79EuW_';
 const IMG='https://ojnlygmerorlsmrcaarf.supabase.co/functions/v1/birthday40-wishlist?img=';
-const SPECIAL_IMAGES={
-  'ral-k7':'https://www.ral-farben.de/img/farbwelt/ral-classic/ral-k7-farbfaecher/ral-k7-colour-fan-raw-color-edition-teaser.jpg'
+const BUY_OVERRIDES={
+  '8bitdo-micro':'https://shop.8bitdo.com/products/8bitdo-micro-bluetooth-gamepad',
+  'niimbot-d110':'https://www.technocity.ru/catalog/detail/1537325/',
+  'digital-caliper':'https://www.joom.ru/ru/products/66fdd19ebef04001a8365029',
+  'olfa-ak5':'https://www.olfa.co.jp/en/products/686.html',
+  'malevich-cutting-mat-a3':'https://market.yandex.ru/card/kovrik-dlya-rezki-malevich-3-kh-sloynyy-a3-sirenevyy/103652006532',
+  'ntag215-tags':'https://market.yandex.ru/card/nfc-metki-ntag215-dlya-kontrolya-dostupa-100pcs/5970172393',
+  'sunshine-ss302a':'https://market.yandex.ru/card/usb-tester-analizator-zaryadki-sunshine-ss-302a/4392417971',
+  'logic-analyzer-24m8ch':'https://market.yandex.ru/card/nabor-ustroystv-usb-logicheskogo-analizatora-mini-tsifrovoy-karmannyy-razmer-8-kanalnaya-vkhodnaya-pamyat-24-mgts/6055511717',
+  'ch341a-programmer':'https://market.yandex.ru/card/ch341a-eeprom-programmator/101552620393',
+  'musedo-cp60g':'https://market.yandex.ru/card/pyezozvukosnimatel-musedo-cp-60g/102627651877',
+  'tagging-gun':'https://market.yandex.ru/card/iglovoy-pistolet-dlya-birok-i-etiketok/103698011237'
+};
+const SHOP_OVERRIDES={
+  '8bitdo-micro':'8BitDo',
+  'niimbot-d110':'Техносити',
+  'digital-caliper':'Joom',
+  'olfa-ak5':'OLFA'
 };
 const gifts=Array.isArray(window.WISHLIST_GIFTS)?window.WISHLIST_GIFTS:[];
 const catalogMeta=window.WISHLIST_META||{};
@@ -59,8 +75,8 @@ function storageWorks(){const k='s40_test_'+Date.now();try{localStorage.setItem(
 function mine(c){return !!getLocal(key(c))}
 function say(t){toast.textContent=t;toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),3000)}
 function pass(g){if(filter==='all')return true;if(filter==='cheap')return g.price<=1500;if(filter==='star')return !!g.star;return g.category===filter}
-function imageSrc(g){return g.imageSrc||SPECIAL_IMAGES[g.code]||IMG+encodeURIComponent(g.code)}
-function render(){const list=gifts.filter(pass);count.textContent=list.length+' из '+gifts.length;let h='';for(const g of list){const taken=reservations.has(g.code),own=taken&&mine(g.code),loading=busy.has(g.code);h+='<article class="card '+(taken?'reservedCard':'')+'"><div class="pic"><img loading="lazy" src="'+imageSrc(g)+'" alt=""><div class="badge '+(g.star?'star':'')+'">'+(g.star?'★ В САМОЕ ТО':'#'+g.category.toUpperCase())+'</div></div><div class="body"><div class="shop">'+g.shop+'</div><div class="title">'+g.title+'</div><div class="sub">'+g.subtitle+'</div><div class="why">'+g.why+'</div><div class="meta"><div class="price">'+money(g.price)+'</div><div class="delivery">'+g.delivery+'</div></div><div class="actions"><a class="btn buy" href="'+g.buyUrl+'" target="_blank" rel="noopener noreferrer">Купить ↗</a><button class="btn reserve '+(taken?(own?'mine':'taken'):'')+'" data-code="'+g.code+'" '+((taken&&!own)||!apiOK||loading?'disabled':'')+'>'+(loading?'Секунду…':taken?(own?'Снять мой резерв':'Уже забрали'):(apiOK?'Забронировать':'Резерв офлайн'))+'</button></div></div></article>'}grid.innerHTML=h;document.querySelectorAll('[data-code]').forEach(b=>b.onclick=()=>act(b.dataset.code))}
+function imageSrc(g){return g.imageSrc||IMG+encodeURIComponent(g.code)}
+function render(){const list=gifts.filter(pass);count.textContent=list.length+' из '+gifts.length;let h='';for(const g of list){const taken=reservations.has(g.code),own=taken&&mine(g.code),loading=busy.has(g.code),buyUrl=BUY_OVERRIDES[g.code]||g.buyUrl,shop=SHOP_OVERRIDES[g.code]||g.shop;h+='<article class="card '+(taken?'reservedCard':'')+'"><div class="pic"><img loading="lazy" src="'+imageSrc(g)+'" alt=""><div class="badge '+(g.star?'star':'')+'">'+(g.star?'★ В САМОЕ ТО':'#'+g.category.toUpperCase())+'</div></div><div class="body"><div class="shop">'+shop+'</div><div class="title">'+g.title+'</div><div class="sub">'+g.subtitle+'</div><div class="why">'+g.why+'</div><div class="meta"><div class="price">'+money(g.price)+'</div><div class="delivery">'+g.delivery+'</div></div><div class="actions"><a class="btn buy" href="'+buyUrl+'" target="_blank" rel="noopener noreferrer">Купить ↗</a><button class="btn reserve '+(taken?(own?'mine':'taken'):'')+'" data-code="'+g.code+'" '+((taken&&!own)||!apiOK||loading?'disabled':'')+'>'+(loading?'Секунду…':taken?(own?'Снять мой резерв':'Уже забрали'):(apiOK?'Забронировать':'Резерв офлайн'))+'</button></div></div></article>'}grid.innerHTML=h;document.querySelectorAll('[data-code]').forEach(b=>b.onclick=()=>act(b.dataset.code))}
 async function rpc(fn,body={}){const r=await fetch(SB+'/rest/v1/rpc/'+fn,{method:'POST',headers:{'apikey':KEY,'content-type':'application/json'},body:JSON.stringify(body),cache:'no-store'});if(!r.ok){const t=await r.text();throw new Error(t||('HTTP '+r.status))}const text=await r.text();return text?JSON.parse(text):null}
 async function sha256(s){const d=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s));return Array.from(new Uint8Array(d)).map(x=>x.toString(16).padStart(2,'0')).join('')}
 async function status(){try{const j=await rpc('birthday40_status');reservations=new Set(Array.isArray(j)?j:[]);apiOK=true;offline.classList.remove('show')}catch{apiOK=false;offline.classList.add('show')}render()}
