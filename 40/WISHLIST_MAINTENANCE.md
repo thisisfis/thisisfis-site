@@ -26,13 +26,28 @@ Each gift uses roughly this shape:
   category: 'tech', // tech | diy | design
   star: true,       // optional
   delivery: 'Short practical hint',
-  why: 'Specific reason this fits Sergey',
+  why: 'Specific giver-facing reason this fits Sergey',
   buyUrl: 'https://product-or-useful-store-page',
   imageSrc: 'https://stable-image-url' // optional
 }
 ```
 
 If `imageSrc` is absent, the page uses the Supabase `birthday40-wishlist` image endpoint keyed by `code`. The image endpoint may scrape an `og:image`; if that fails, it deliberately returns a branded placeholder instead of breaking the card.
+
+## Public description rule
+
+The `why` field is public and written for friends, colleagues and other gift-givers. It should explain, in ordinary language, **why this item may suit Sergey** and what aspect of his tastes/work/interests makes it a plausible gift.
+
+Never mention or imply the assistant's internal selection process. Public copy must not contain phrases or ideas such as:
+
+- "из старого контекста", "по контексту", "из наших чатов";
+- "память ChatGPT", "глобальный контекст", "профиль пользователя";
+- "я выбрал это потому что знаю...";
+- chronology of private conversations or how a fact was retrieved.
+
+Do not expose private or sensitive personal facts in `why`. Use only a natural, socially appropriate level of detail that Sergey could comfortably show to a mixed group of friends, colleagues and acquaintances.
+
+Keep `why` approximately the current card length: usually 2–3 compact sentences, specific enough to justify the choice but short enough to scan.
 
 ## Curation principle
 
@@ -63,10 +78,11 @@ When the user asks to add N more gifts:
 3. Find approximately the requested price band (default 300–5000 RUB unless the user changes it).
 4. Prefer Russian shops/marketplaces or pages that give a giver a practical route to buying the item. A durable model/product page is acceptable even if a particular seller later disappears.
 5. Add exactly N distinct ideas unless the user asks otherwise.
-6. Append them to `40/gifts.js` and preserve the existing card schema and filters.
-7. Add every new `code` to the allowlist in `public.birthday40_reserve` via a Supabase migration.
-8. Add every new item to the `birthday40-wishlist` Edge Function image catalog unless it has a stable `imageSrc` in `gifts.js`.
-9. Let the normal GitHub → Vercel deployment run and check deployment status.
+6. Write every `why` using the public description rule above.
+7. Append them to `40/gifts.js` and preserve the existing card schema and filters.
+8. Add every new `code` to the allowlist in `public.birthday40_reserve` via a Supabase migration.
+9. Add every new item to the `birthday40-wishlist` Edge Function image catalog unless it has a stable `imageSrc` in `gifts.js`.
+10. Let the normal GitHub → Vercel deployment run and check deployment status.
 
 ## Reservation security invariants
 
