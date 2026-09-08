@@ -1,24 +1,20 @@
 # Wishlist /40 — maintenance workflow
 
-This file is an internal maintenance note for ChatGPT/Codex. It is not linked from the public page.
+This is an internal maintenance note for ChatGPT/Codex. It is not linked from the public page.
 
 ## Public behavior
 
 - Public URL: `https://thisisfis.com/40/`
-- The page is `noindex, nofollow, noarchive`.
-- Reservation is anonymous: do not ask for a name, email, phone number, Telegram handle or other identifier.
+- Keep the page `noindex, nofollow, noarchive`.
+- Reservation is anonymous: never ask for a name, email, phone, Telegram handle or other identifier.
 - The browser generates a random secret token. Only its SHA-256 hash is sent to the reservation RPC; the original token stays in `localStorage` so the same browser can remove its own reservation.
-- The Supabase publishable key may be present in client code; never put a service-role key or other secret in the repository/client.
+- A Supabase publishable key may be present in client code; never expose a service-role key or another secret in the repository/client.
 
 ## Catalog source of truth
 
-Public catalog data lives in:
+Public catalog data lives in `40/gifts.js` and is rendered by `40/index.html`.
 
-`40/gifts.js`
-
-The public page `40/index.html` renders `window.WISHLIST_GIFTS`.
-
-Each gift uses:
+Each gift uses roughly this shape:
 
 ```js
 {
@@ -27,39 +23,50 @@ Each gift uses:
   subtitle: 'Short factual description',
   price: 1990,
   shop: 'Store',
-  category: 'tech', // tech | diy | design; extend UI filters only if genuinely useful
+  category: 'tech', // tech | diy | design
   star: true,       // optional
-  delivery: 'Москва: 1–2 дня',
-  why: 'Short, specific reason this fits Sergey',
-  buyUrl: 'https://direct-product-page',
+  delivery: 'Short practical hint',
+  why: 'Specific reason this fits Sergey',
+  buyUrl: 'https://product-or-useful-store-page',
   imageSrc: 'https://stable-image-url' // optional
 }
 ```
 
-If `imageSrc` is absent, the page uses the existing Supabase image endpoint keyed by `code`. For newly added gifts, prefer a stable direct image URL from the manufacturer/store when available; this avoids needing to edit the image proxy.
+If `imageSrc` is absent, the page uses the Supabase `birthday40-wishlist` image endpoint keyed by `code`. The image endpoint may scrape an `og:image`; if that fails, it deliberately returns a branded placeholder instead of breaking the card.
 
-Update `window.WISHLIST_META.verifiedAt` every time the catalog is materially rechecked.
+## Curation principle
 
-## Command: add 15 more gifts
+The wishlist is a curated idea list, not a live inventory monitor. Do **not** spend time continuously refreshing old prices, stock or delivery labels. A product card may become stale; a giver can use the model/title as a search lead and find the same item or a sensible equivalent.
 
-When the user asks to add 15 more gifts (or equivalent wording), execute the full workflow autonomously:
+When adding new items, current Russian availability and a useful purchase page are desirable, but context-fit and variety matter more than maintaining perfect real-time commerce data.
 
-1. Retrieve current non-sensitive global ChatGPT context about Sergey that can materially improve gift selection. Do not use or expose health, sex/relationship, financial, political, authentication or other sensitive information.
-2. Read the current `40/gifts.js` first and avoid duplicates both by exact product and by near-identical idea.
-3. Search live Russian marketplaces and shops. Requirements inherited from the original wishlist:
-   - exactly 15 new items unless the user asks otherwise;
-   - price 300–5000 RUB;
-   - actually in stock at the time of verification;
-   - delivery to Moscow within 3 days;
-   - direct product URL, not a search-results URL;
-   - usable product image;
-   - varied price points and categories.
-4. Selection quality matters more than filling categories. Favor things supported by global context: compact well-designed hardware, industrial/product/graphic design, AI/creative tooling, electronics and physical prototyping, retrofuturism/engineering aesthetics, tactile desk objects, visual culture, photography/media experimentation, strong books and genuinely useful oddities. Avoid generic anniversary souvenirs, low-quality novelty clutter and repetitive variants of items already present.
-5. For each candidate verify current price, availability and delivery immediately before adding it. If any constraint cannot be verified, reject the candidate and find another.
-6. Append the 15 items to `40/gifts.js`, update `verifiedAt`, and preserve the existing visual/card schema.
-7. Reservation RPC currently validates gift codes with a server-side allowlist. Add every new `code` to the allowlist in `public.birthday40_reserve` via a Supabase migration before considering the update complete.
-8. If a new item has no `imageSrc`, also add it to the `birthday40-wishlist` Edge Function image catalog, or replace it with a stable `imageSrc` in `gifts.js`.
-9. Deploy via the normal GitHub → Vercel flow and verify `/40/` loads, all new images render, filters count correctly, buy links open, and reservation/status calls still work.
+## Context order
+
+When the user asks for more gifts and specifically wants breadth, do not overfit to the most recent chats. Prefer this process:
+
+1. Retrieve non-sensitive global ChatGPT context about Sergey.
+2. Deliberately start from the oldest useful context and move forward through later interests/projects.
+3. Build a varied idea pool before searching products.
+4. Avoid using or exposing sensitive information such as health, sex/relationship details, finances, politics, authentication data, or private identifiers.
+5. Check the existing catalog and reject duplicates and near-duplicates.
+
+Useful long-running themes include, when actually supported by context: graphic/product/industrial design, print and physical production, ThisisFiS/merch, programming and physical controls, AI as a working tool, music/audio, photography and visual experiments, travel, retro technology and retrofuturism, books/visual culture, compact tools, tactile desk objects, electronics/prototyping, and clever objects with a strong concept.
+
+Avoid generic anniversary souvenirs, motivational mugs, random low-quality novelty clutter, or fifteen variants of the same recent obsession.
+
+## Command: add more gifts
+
+When the user asks to add N more gifts:
+
+1. Read `40/gifts.js` first.
+2. Use the context-order rule above.
+3. Find approximately the requested price band (default 300–5000 RUB unless the user changes it).
+4. Prefer Russian shops/marketplaces or pages that give a giver a practical route to buying the item. A durable model/product page is acceptable even if a particular seller later disappears.
+5. Add exactly N distinct ideas unless the user asks otherwise.
+6. Append them to `40/gifts.js` and preserve the existing card schema and filters.
+7. Add every new `code` to the allowlist in `public.birthday40_reserve` via a Supabase migration.
+8. Add every new item to the `birthday40-wishlist` Edge Function image catalog unless it has a stable `imageSrc` in `gifts.js`.
+9. Let the normal GitHub → Vercel deployment run and check deployment status.
 
 ## Reservation security invariants
 
@@ -67,6 +74,6 @@ Do not weaken these without an explicit user request:
 
 - no personal identifier is requested for reservations;
 - no raw reservation token is sent to Supabase;
-- direct table access stays protected by RLS/grants; public interaction goes through the narrow RPC functions;
+- direct table access remains protected by RLS/grants; public interaction goes through narrow RPC functions;
 - do not expose service-role credentials;
-- do not reveal who reserved a gift (there is intentionally no such public identity now).
+- do not reveal who reserved a gift; there intentionally is no public identity attached to reservations.
