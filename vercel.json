@@ -24,7 +24,7 @@
       ]
     },
     {
-      "source": "/40/:path*",
+      "source": "/40/",
       "headers": [
         {
           "key": "X-Robots-Tag",
