@@ -13,25 +13,13 @@
       "permanent": true
     }
   ],
+  "rewrites": [
+    {
+      "source": "/40/og-wishlist-v2.jpg",
+      "destination": "/40/og-wishlist.jpg"
+    }
+  ],
   "headers": [
-    {
-      "source": "/40",
-      "headers": [
-        {
-          "key": "X-Robots-Tag",
-          "value": "noindex, nofollow, noarchive"
-        }
-      ]
-    },
-    {
-      "source": "/40/:path*",
-      "headers": [
-        {
-          "key": "X-Robots-Tag",
-          "value": "noindex, nofollow, noarchive"
-        }
-      ]
-    },
     {
       "source": "/40/gifts.js",
       "headers": [
