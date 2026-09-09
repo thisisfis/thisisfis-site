@@ -35,10 +35,6 @@
           "value": ".*(TelegramBot|WebpageBot).*"
         }
       ]
-    },
-    {
-      "source": "/40/og-wishlist-v2.jpg",
-      "destination": "/40/og-wishlist.jpg"
     }
   ],
   "headers": [
