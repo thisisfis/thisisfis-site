@@ -10,9 +10,24 @@ This is an internal maintenance note for ChatGPT/Codex. It is not linked from th
 - The browser generates a random secret token. Only its SHA-256 hash is sent to the reservation RPC; the original token stays in `localStorage` so the same browser can remove its own reservation.
 - A Supabase publishable key may be present in client code; never expose a service-role key or another secret in the repository/client.
 
+## Frontend architecture
+
+Keep responsibilities separated:
+
+- `40/index.html` — semantic page shell, metadata and asset loading only.
+- `40/styles.css` — all wishlist presentation and responsive layout.
+- `40/app.js` — filtering, price-column ordering, rendering, reservations, polling and browser state.
+- `40/gifts.js` — public catalog data; this is the source of truth for gift content.
+
+Do not move catalog copy back into `index.html` or add one-off inline scripts/styles unless there is a strong reason. Prefer small, behavior-preserving changes over broad rewrites.
+
+The wide desktop catalog uses four columns; normal desktop uses three; tablet uses two; mobile uses one. Price-column ordering is a desktop enhancement handled by `app.js`, while CSS owns the visual column count.
+
+Reservation polling should stay lightweight: do not poll while the tab is hidden and avoid rebuilding the card grid when reservation/API state did not change.
+
 ## Catalog source of truth
 
-Public catalog data lives in `40/gifts.js` and is rendered by `40/index.html`.
+Public catalog data lives in `40/gifts.js` and is rendered by `40/app.js`.
 
 Each gift uses roughly this shape:
 
@@ -34,26 +49,31 @@ Each gift uses roughly this shape:
 
 If `imageSrc` is absent, the page uses the Supabase `birthday40-wishlist` image endpoint keyed by `code`. The image endpoint may scrape an `og:image`; if that fails, it deliberately returns a branded placeholder instead of breaking the card.
 
+Prefer storing the final canonical shop and `buyUrl` directly in `gifts.js`. `app.js` still contains a small compatibility override map for older cards; do not add new entries there unless updating the catalog source is impractical.
+
 ## Public description rule
 
 The `why` field is public and written for friends, colleagues and other gift-givers. It should explain, in ordinary language, **why this item may suit Sergey** and what aspect of his tastes/work/interests makes it a plausible gift.
 
-Never mention or imply the assistant's internal selection process. Public copy must not contain phrases or ideas such as:
+The editorial voice may be either neutral third person or, when it makes the copy better, a light first-person voice of Sergey's personal AI assistant. That voice can make an inference or joke (for example, “я выбрал…”), but it must never expose internal retrieval mechanics, hidden memory, system context or sensitive/private facts.
 
-- "из старого контекста", "по контексту", "из наших чатов";
+Do not use phrases that reveal implementation or private-context mechanics such as:
+
+- "из старого контекста", "из наших чатов";
 - "память ChatGPT", "глобальный контекст", "профиль пользователя";
-- "я выбрал это потому что знаю...";
 - chronology of private conversations or how a fact was retrieved.
 
 Do not expose private or sensitive personal facts in `why`. Use only a natural, socially appropriate level of detail that Sergey could comfortably show to a mixed group of friends, colleagues and acquaintances.
 
-Keep `why` approximately the current card length: usually 2–3 compact sentences, specific enough to justify the choice but short enough to scan.
+Keep `why` approximately the current card length: usually 2–3 compact sentences, specific enough to justify the choice but short enough to scan next to neighboring cards.
 
 ## Curation principle
 
 The wishlist is a curated idea list, not a live inventory monitor. Do **not** spend time continuously refreshing old prices, stock or delivery labels. A product card may become stale; a giver can use the model/title as a search lead and find the same item or a sensible equivalent.
 
 When adding new items, current Russian availability and a useful purchase page are desirable, but context-fit and variety matter more than maintaining perfect real-time commerce data.
+
+For products with variants, do not assume a `variant_id` or query parameter selects the intended SKU. Verify the live result (variant name, price and/or article) before publishing a deep link. If the shop cannot reliably deep-link a variant, make that limitation explicit instead of pretending the link is exact.
 
 ## Context order
 
@@ -79,10 +99,11 @@ When the user asks to add N more gifts:
 4. Prefer Russian shops/marketplaces or pages that give a giver a practical route to buying the item. A durable model/product page is acceptable even if a particular seller later disappears.
 5. Add exactly N distinct ideas unless the user asks otherwise.
 6. Write every `why` using the public description rule above.
-7. Append them to `40/gifts.js` and preserve the existing card schema and filters.
-8. Add every new `code` to the allowlist in `public.birthday40_reserve` via a Supabase migration.
+7. Add them to `40/gifts.js` and preserve the existing card schema and filters.
+8. Add every new `code` to the allowlist in `public.birthday40_reserve` via a Supabase migration **in the same change**.
 9. Add every new item to the `birthday40-wishlist` Edge Function image catalog unless it has a stable `imageSrc` in `gifts.js`.
-10. Let the normal GitHub → Vercel deployment run and check deployment status.
+10. Update any public item-count metadata in `40/index.html` when the catalog size changes.
+11. Let the normal GitHub → Vercel deployment run and check deployment status.
 
 ## Reservation security invariants
 
