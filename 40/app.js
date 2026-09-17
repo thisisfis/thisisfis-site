@@ -247,9 +247,10 @@
     try {
       const result = await rpc('birthday40_status');
       const nextReservations = new Set(Array.isArray(result) ? result : []);
-      const changed = !setsEqual(state.reservations, nextReservations) || setApiState(true);
+      const reservationsChanged = !setsEqual(state.reservations, nextReservations);
+      const apiChanged = setApiState(true);
       state.reservations = nextReservations;
-      if (changed) render();
+      if (reservationsChanged || apiChanged) render();
     } catch {
       if (setApiState(false)) render();
     }
