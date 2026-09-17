@@ -92,7 +92,9 @@ body {
   background: #12151a;
   color: #d6d9df;
   cursor: pointer;
-  font: 650 13px/normal inherit;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 650;
 }
 
 .chip.on {
