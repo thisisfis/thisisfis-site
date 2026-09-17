@@ -1,7 +1,7 @@
 window.WISHLIST_META = {
   location: 'Москва',
   priceMin: 300,
-  priceMax: 5000
+  priceMax: 7190
 };
 
 window.WISHLIST_GIFTS = [
@@ -60,5 +60,6 @@ window.WISHLIST_GIFTS = [
   {code:'norman-everyday-things',title:'Дон Норман — «Дизайн привычных вещей»',subtitle:'Классика человекоцентричного продуктового дизайна',price:1249,shop:'Магазин Студии Лебедева',category:'design',star:true,delivery:'Есть на складе; мягкая обложка',why:'Очень точное попадание для человека, который всё чаще проектирует не только графику, но и интерфейсы и вещи. Книга объясняет, почему одни объекты понятны без инструкции, а другие раздражают.',buyUrl:'https://store.artlebedev.ru/books/industrial/dizain-privychnykh-veshchei-2022/'},
   {code:'measuring-loupe-10x',title:'Измерительная лупа 10× со шкалой',subtitle:'Алюминиевая лупа с подсветкой и измерительной сеткой',price:990,shop:'CoinCity',category:'design',star:true,delivery:'Модель DS-3',why:'Подойдёт дизайнеру, связанному с печатью и производством: под увеличением внезапно видны растр, край печати, волокна ткани и мелкие дефекты. Полезный инструмент для профессионального любопытства.',buyUrl:'https://coincity.ru/product_15054.html'},
   {code:'tagging-gun',title:'Игловой пистолет для бирок',subtitle:'Маркиратор для ярлыков и этикеток на одежде',price:412,shop:'Яндекс Маркет',category:'diy',delivery:'Простой игловой маркиратор',why:'Подарок на стыке мерча и производства: быстро крепить бирки к одежде и образцам. Для человека, который знает весь путь вещи от макета до готового изделия, это понятный рабочий инструмент.',buyUrl:'https://m.integration.vs.market.yandex.net/card/iglovoy-pistolet-dlya-birok-i-etiketok/103698011237'},
+  {code:'alpaka-elements-tote-bko',title:'ALPAKA Elements Tote Medium',subtitle:'Black Knight Orange EPLX200 · 14,5 л',price:7190,shop:'Bag&Wallet',category:'design',star:true,delivery:'Нужна именно версия Black Knight Orange EPLX200',why:'ChatGPT посмотрел на работу, поездки, вечное таскание техники, образцов и «да я только пару вещей возьму» — и сам назначил Серёже технический tote. Самое подозрительное: Black Knight с оранжевым нутром действительно выглядит так, будто её подбирали под него.',buyUrl:'https://www.bagandwallet.ru/collection/alpaka-3/product/sumka-alpaka-elements-tote-kupit?variant_id=617265154',imageSrc:'https://cdn.insales-shop.ru/images/products/1/8025/685776729/large_tote-hero_1020x1200.webp'},
   {code:'mechanic-ti15',title:'MECHANIC TI-15',subtitle:'Титановый антистатический прецизионный пинцет',price:900,shop:'Суперайс',category:'diy',star:true,delivery:'Изогнутый, немагнитный, ESD',why:'Очень точный маленький инструмент для электроники и прототипов. Титановый антистатический пинцет приятен тем, что выглядит как серьёзная инженерная вещь, даже если задача — просто поймать крошечный винт.',buyUrl:'https://supereyes.ru/catalog/antistaticheskie-pincety/mechanic_ti_15/'}
 ];
